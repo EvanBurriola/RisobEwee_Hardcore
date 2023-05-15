@@ -16,9 +16,8 @@ public class TotemOfResurrection extends Item {
     public InteractionResult useOn(UseOnContext pContext){
         if(pContext.getLevel().isClientSide){
             BlockPos posClicked = pContext.getClickedPos();
-//            Player player = pContext.getPlayer();
-            Block block = pContext.getLevel().getBlockState(posClicked.below()).getBlock();
-            if(block.getRegistryName().equals("resurrection_block")){
+            Block block = pContext.getLevel().getBlockState(posClicked).getBlock();
+            if(block.getRegistryName().toString().equals("risobewee_hardcore:resurrection_block")){
                 RisobEwee_HardcoreMain.LOGGER.info("BLOCK CLICKED");
             }
         }

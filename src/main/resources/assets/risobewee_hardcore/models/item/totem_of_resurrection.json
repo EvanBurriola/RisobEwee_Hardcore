@@ -1,0 +1,6 @@
+{
+"parent": "item/generated",
+"textures": {
+"layer0": "risobewee_hardcore:item/totem_of_resurrection"
+}
+}

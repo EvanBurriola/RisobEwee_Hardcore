@@ -1,5 +1,8 @@
 {
   "variants": {
-    "": {"model": "risobewee_hardcore:block/resurrection_block"}
+    "facing=north": { "model": "risobewee_harcore:block/resurrection_block" },
+    "facing=east": { "model": "risobewee_harcore:block/resurrection_block", "y": 90 },
+    "facing=south": { "model": "risobewee_harcore:block/resurrection_block", "y": 180 },
+    "facing=west": { "model": "risobewee_harcore:block/resurrection_block", "y": 270 }
   }
 }

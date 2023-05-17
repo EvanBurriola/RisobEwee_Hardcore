@@ -11,6 +11,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import risobewee_hardcore.RisobEwee_HardcoreMain;
+import risobewee_hardcore.block.custom.Resurrection_BlockBlock;
 import risobewee_hardcore.item.ModItems;
 
 import java.util.function.Supplier;
@@ -20,7 +21,7 @@ public class ModBlocks {
             DeferredRegister.create(ForgeRegistries.BLOCKS, RisobEwee_HardcoreMain.MOD_ID);
 
     public static final RegistryObject<Block> RESURRECTION_BLOCK = registerBlock("resurrection_block",
-            () -> new Block(BlockBehaviour.Properties.of(Material.BARRIER).strength(9f).lightLevel(state -> 7)), CreativeModeTab.TAB_MISC);
+            () -> new Resurrection_BlockBlock(BlockBehaviour.Properties.of(Material.BARRIER).noOcclusion().strength(9f)), CreativeModeTab.TAB_MISC);
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block, CreativeModeTab tab){
         RegistryObject<T> toReturn = BLOCKS.register(name,block);
         registerBlockItem(name, toReturn, tab);

@@ -35,7 +35,10 @@ public class ModServerEvents {
             double x = player.getX();
             double y = player.getY();
             double z = player.getZ();
-            player.getLevel().addFreshEntity(new ItemEntity(player.getLevel(), x, y, z, totemStack));
+            //Make initial dropped totem unlimited lifetime
+            ItemEntity droppedTotem = new ItemEntity(player.getLevel(), x, y, z, totemStack);
+            droppedTotem.setUnlimitedLifetime();
+            player.getLevel().addFreshEntity(droppedTotem);
             RisobEwee_HardcoreMain.LOGGER.info("Dropped totem");
         }
     }
@@ -76,7 +79,7 @@ public class ModServerEvents {
         Commands c = new Commands(Commands.CommandSelection.ALL);
 
         player.setInvulnerable(false);
-        c.performCommand(cst, "attribute " + displayName.getString() + " minecraft:generic.max_health base set 10");
+        c.performCommand(cst, "attribute " + displayName.getString() + " minecraft:generic.max_health base set " + Integer.toString(newHealth));
         player.hurt(DamageSource.FALL, newHealth);
 
         RisobEwee_HardcoreMain.LOGGER.info(displayName.getString() + " had their health reduced!");

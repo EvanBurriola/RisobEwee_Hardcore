@@ -1,4 +1,5 @@
 {
   "block.risobewee_hardcore.resurrection_block": "Resurrection Altar",
-  "item.risobewee_hardcore.totem_of_resurrection": "Essence"
+  "item.risobewee_hardcore.totem_of_resurrection": "Essence",
+  "item.risobewee_hardcore.portal_key": "Portal Key"
 }

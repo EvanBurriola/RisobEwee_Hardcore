@@ -21,6 +21,7 @@ import risobewee_hardcore.block.entity.ModBlockEntities;
 import risobewee_hardcore.entity.ModEntityTypes;
 import risobewee_hardcore.entity.client.CryptCatRenderer;
 import risobewee_hardcore.item.ModItems;
+import risobewee_hardcore.villager.ModPOIs;
 import risobewee_hardcore.world.dimension.ModDimensions;
 import risobewee_hardcore.world.structure.ModStructures;
 import software.bernie.geckolib3.GeckoLib;
@@ -46,6 +47,7 @@ public class RisobEwee_HardcoreMain
         ModStructures.register(eventBus);
         ModDimensions.register();
         ModEntityTypes.register(eventBus);
+        ModPOIs.register(eventBus);
 
         GeckoLib.initialize();
 
@@ -53,7 +55,9 @@ public class RisobEwee_HardcoreMain
         eventBus.addListener(this::clientSetup);
     }
     private void clientSetup(final FMLClientSetupEvent event){
+
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.RESURRECTION_BLOCK.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.CRYPT_PORTAL.get(), RenderType.translucent());
 
         EntityRenderers.register(ModEntityTypes.CRYPT_CAT.get(), CryptCatRenderer::new);
 
@@ -65,6 +69,7 @@ public class RisobEwee_HardcoreMain
         // some preinit code
         LOGGER.info("HELLO FROM PREINIT");
         LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
+
     }
 
 

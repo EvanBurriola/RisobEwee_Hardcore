@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "axis=z": { "model": "risobewee_hardcore:block/crypt_portal_ew" },
+    "axis=x": { "model": "risobewee_hardcore:block/crypt_portal_ns" }
+  }
+}

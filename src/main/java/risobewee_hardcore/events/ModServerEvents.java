@@ -2,6 +2,9 @@ package risobewee_hardcore.events;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -25,21 +28,24 @@ public class ModServerEvents {
     public static void dropTotemOnDeath(LivingDeathEvent event){
         if(event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
-            ItemStack totemStack = new ItemStack(ModItems.TOTEM_OF_RESURRECTION.get());
-            //Put player 'soul' -> display name on item stack
-            CompoundTag nbtData = new CompoundTag();
-            nbtData.putString("risobewee_hardcore.soul", player.getDisplayName().getString());
-            totemStack.setTag(nbtData);
+            if(!player.getTags().contains("full_dead")) {
+                ItemStack totemStack = new ItemStack(ModItems.TOTEM_OF_RESURRECTION.get());
+                //Put player 'soul' -> display name on item stack
+                CompoundTag nbtData = new CompoundTag();
+                nbtData.putString("risobewee_hardcore.soul", player.getDisplayName().getString());
+                totemStack.setTag(nbtData);
 
-            //Drop totem at death position
-            double x = player.getX();
-            double y = player.getY();
-            double z = player.getZ();
-            //Make initial dropped totem unlimited lifetime
-            ItemEntity droppedTotem = new ItemEntity(player.getLevel(), x, y, z, totemStack);
-            droppedTotem.setUnlimitedLifetime();
-            player.getLevel().addFreshEntity(droppedTotem);
-            RisobEwee_HardcoreMain.LOGGER.info("Dropped totem");
+                //Drop totem at death position
+                double x = player.getX();
+                double y = player.getY();
+                double z = player.getZ();
+                //Make initial dropped totem unlimited lifetime
+                ItemEntity droppedTotem = new ItemEntity(player.getLevel(), x, y, z, totemStack);
+                droppedTotem.setUnlimitedLifetime();
+                player.getLevel().addFreshEntity(droppedTotem);
+                RisobEwee_HardcoreMain.LOGGER.info("Dropped totem");
+            }
+            RisobEwee_HardcoreMain.LOGGER.info("Full Dead");
         }
     }
 
@@ -57,7 +63,7 @@ public class ModServerEvents {
 
 
     //Adds tags to indicate the upcoming death(Player revived after first death will have tag death2)
-    public static void resurrectFromAlter(Player player, BlockPos alterBlock){
+    public static void resurrectFromAltar(Player player, BlockPos alterBlock){
         if(player.getTags().contains("resurrectable")) {
             //To teleport revived player above alter
             double x = alterBlock.above().getX();
@@ -68,8 +74,9 @@ public class ModServerEvents {
             setPlayerGameMode(player, GameType.SURVIVAL);
             reducePlayerHealth(player, 14);
             player.addTag("full_dead");
+            player.getLevel().playLocalSound(x, y, z, SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.WEATHER, 1.0F, 1.0F, false);
         }
-        RisobEwee_HardcoreMain.LOGGER.info("Resurrect from alter Triggered");
+        RisobEwee_HardcoreMain.LOGGER.info("Resurrect from altar Triggered");
     }
 
     //Need to test for server sided events. May have to use ServerPlayer & Server event handlers..?

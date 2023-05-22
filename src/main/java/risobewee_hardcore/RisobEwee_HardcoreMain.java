@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import risobewee_hardcore.block.ModBlocks;
 import risobewee_hardcore.block.entity.ModBlockEntities;
 import risobewee_hardcore.item.ModItems;
+import risobewee_hardcore.world.structure.ModStructures;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod("risobewee_hardcore")
@@ -37,6 +38,8 @@ public class RisobEwee_HardcoreMain
         ModItems.register(eventBus);
         ModBlockEntities.register(eventBus);
         ModBlocks.register(eventBus);
+        ModStructures.register(eventBus);
+
         eventBus.addListener(this::setup);
         eventBus.addListener(this::clientSetup);
     }

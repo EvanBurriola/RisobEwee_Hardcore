@@ -3,6 +3,7 @@ package risobewee_hardcore;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
@@ -17,9 +18,12 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 import risobewee_hardcore.block.ModBlocks;
 import risobewee_hardcore.block.entity.ModBlockEntities;
+import risobewee_hardcore.entity.ModEntityTypes;
+import risobewee_hardcore.entity.client.CryptCatRenderer;
 import risobewee_hardcore.item.ModItems;
 import risobewee_hardcore.world.dimension.ModDimensions;
 import risobewee_hardcore.world.structure.ModStructures;
+import software.bernie.geckolib3.GeckoLib;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod("risobewee_hardcore")
@@ -41,12 +45,17 @@ public class RisobEwee_HardcoreMain
         ModBlocks.register(eventBus);
         ModStructures.register(eventBus);
         ModDimensions.register();
+        ModEntityTypes.register(eventBus);
+
+        GeckoLib.initialize();
 
         eventBus.addListener(this::setup);
         eventBus.addListener(this::clientSetup);
     }
     private void clientSetup(final FMLClientSetupEvent event){
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.RESURRECTION_BLOCK.get(), RenderType.cutout());
+
+        EntityRenderers.register(ModEntityTypes.CRYPT_CAT.get(), CryptCatRenderer::new);
 
     }
 

@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import risobewee_hardcore.block.ModBlocks;
 import risobewee_hardcore.block.entity.ModBlockEntities;
 import risobewee_hardcore.item.ModItems;
+import risobewee_hardcore.villager.ModPOIs;
 import risobewee_hardcore.world.dimension.ModDimensions;
 import risobewee_hardcore.world.structure.ModStructures;
 
@@ -41,13 +42,14 @@ public class RisobEwee_HardcoreMain
         ModBlocks.register(eventBus);
         ModStructures.register(eventBus);
         ModDimensions.register();
+        ModPOIs.register(eventBus);
 
         eventBus.addListener(this::setup);
         eventBus.addListener(this::clientSetup);
     }
     private void clientSetup(final FMLClientSetupEvent event){
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.RESURRECTION_BLOCK.get(), RenderType.cutout());
-
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.CRYPT_PORTAL.get(), RenderType.translucent());
     }
 
 
@@ -56,6 +58,7 @@ public class RisobEwee_HardcoreMain
         // some preinit code
         LOGGER.info("HELLO FROM PREINIT");
         LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
+
     }
 
 

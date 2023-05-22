@@ -62,7 +62,9 @@ public class TotemOfResurrection extends Item {
                 }
 
                 if(playerSoul != null) {
-                    ModServerEvents.resurrectFromAlter(playerSoul, posClicked);
+                    ModServerEvents.resurrectFromAltar(playerSoul, posClicked);
+                    pContext.getItemInHand().hurt(2,null,null);
+
                 }
 
             }

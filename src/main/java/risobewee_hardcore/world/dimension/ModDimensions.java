@@ -9,7 +9,7 @@ import risobewee_hardcore.RisobEwee_HardcoreMain;
 
 public class ModDimensions {
     public static final ResourceKey<Level> CRYPT_KEY = ResourceKey.create(Registry.DIMENSION_REGISTRY,
-            new ResourceLocation(RisobEwee_HardcoreMain.MOD_ID, "crpyt"));
+            new ResourceLocation(RisobEwee_HardcoreMain.MOD_ID, "crypt"));
     public static final ResourceKey<DimensionType> CRYPT_TYPE =
             ResourceKey.create(Registry.DIMENSION_TYPE_REGISTRY, CRYPT_KEY.getRegistryName());
 

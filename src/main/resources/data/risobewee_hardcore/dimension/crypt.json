@@ -1,0 +1,29 @@
+{
+  "type": "risobewee_hardcore:crypt",
+  "generator": {
+    "type": "minecraft:flat",
+    "settings": {
+      "biome": "minecraft:warped_forest",
+      "lakes": false,
+      "features": true,
+      "layers": [
+        {
+          "block": "minecraft:bedrock",
+          "height": 1
+        },
+        {
+          "block": "minecraft:dirt",
+          "height": 3
+        },
+        {
+          "block": "minecraft:grass_block",
+          "height": 1
+        }
+      ],
+      "structure_overrides": [
+        "risobewee_hardcore:crypt_keeper",
+        "risobewee_hardcore:crypt_graveyard"
+      ]
+    }
+  }
+}

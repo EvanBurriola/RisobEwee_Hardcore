@@ -50,7 +50,7 @@ public class CryptCatEntity extends Monster implements IAnimatable {
         double chance = Math.random();
         if (chance <= 0.5) {
             if (holder.is(Biomes.WARPED_FOREST)) {
-                RisobEwee_HardcoreMain.LOGGER.info("amongus"+ (checkMonsterSpawnRules(pCryptCatEntity, pLevel, pSpawnType, pPos, pRandom) && pLevel.getBlockState(pPos.below()).is(BlockTags.NYLIUM)));
+//                RisobEwee_HardcoreMain.LOGGER.info("amongus"+ (checkMonsterSpawnRules(pCryptCatEntity, pLevel, pSpawnType, pPos, pRandom) && pLevel.getBlockState(pPos.below()).is(BlockTags.NYLIUM)));
                 return checkMonsterSpawnRules(pCryptCatEntity, pLevel, pSpawnType, pPos, pRandom) && pLevel.getBlockState(pPos.below()).is(BlockTags.NYLIUM);
             }
         }

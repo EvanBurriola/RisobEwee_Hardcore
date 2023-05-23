@@ -2,10 +2,12 @@ package risobewee_hardcore.events;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.commands.GameRuleCommand;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import risobewee_hardcore.RisobEwee_HardcoreMain;
@@ -51,6 +53,10 @@ public class ModServerEvents {
                 RisobEwee_HardcoreMain.LOGGER.info("Dropped totem");
             }
             RisobEwee_HardcoreMain.LOGGER.info("Full Dead");
+            if(player.getLevel().dimension().equals(ModDimensions.CRYPT_KEY)){
+                boolean removed = playersInCrypt.remove(player);
+                RisobEwee_HardcoreMain.LOGGER.info("Removed " + player.getDisplayName().getString() + ": " + removed);
+            }
         }
     }
 
@@ -81,6 +87,14 @@ public class ModServerEvents {
 
     @SubscribeEvent
     public static void portalClosingEvent(PlayerEvent.PlayerChangedDimensionEvent event){
+        if(event.getPlayer().isSpectator()) {
+            RisobEwee_HardcoreMain.LOGGER.info("Players in Crypt:");
+            for (Player p : playersInCrypt) {
+                RisobEwee_HardcoreMain.LOGGER.info(p.getDisplayName().getString());
+            }
+            return;
+        }
+
         if(event.getTo().equals(ModDimensions.CRYPT_KEY)) {
             playersInCrypt.add(event.getPlayer());
         } else if (event.getTo().equals(Level.OVERWORLD) && event.getFrom().equals(ModDimensions.CRYPT_KEY)) {
@@ -92,6 +106,12 @@ public class ModServerEvents {
             //Close portal
             destroyPortalBlock(event.getPlayer().blockPosition(),event.getPlayer().getLevel());
         }
+
+//        RisobEwee_HardcoreMain.LOGGER.info("Players in Crypt:");
+//        for (Player p : playersInCrypt){
+//            RisobEwee_HardcoreMain.LOGGER.info(p.getDisplayName().getString());
+//        }
+
     }
 
 
@@ -111,6 +131,15 @@ public class ModServerEvents {
             player.getLevel().playLocalSound(x, y, z, SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.BLOCKS, 1.0F, 1.0F, false);
             //Destroy alter after use
             player.getLevel().destroyBlock(alterBlock,false);
+
+            //Add revived player to current crypt population
+            playersInCrypt.add(player);
+
+            //Log players in dimension
+//            RisobEwee_HardcoreMain.LOGGER.info("Players in Crypt:");
+//            for (Player p : playersInCrypt){
+//                RisobEwee_HardcoreMain.LOGGER.info(p.getDisplayName().getString());
+//            }
         }
         RisobEwee_HardcoreMain.LOGGER.info("Resurrect from altar Triggered");
     }
@@ -118,7 +147,7 @@ public class ModServerEvents {
     //Need to test for server sided events. May have to use ServerPlayer & Server event handlers..?
     private static void reducePlayerHealth(Player player, int newHealth){
         Component displayName = player.getDisplayName();
-        CommandSourceStack cst = player.createCommandSourceStack().withMaximumPermission(2);
+        CommandSourceStack cst = player.getServer().createCommandSourceStack().withMaximumPermission(2);
         Commands c = new Commands(Commands.CommandSelection.ALL);
 
         player.setInvulnerable(false);
@@ -130,9 +159,11 @@ public class ModServerEvents {
 
     private static void setPlayerGameMode(Player player, GameType mode){
         Component displayName = player.getDisplayName();
-        CommandSourceStack cst = player.createCommandSourceStack().withMaximumPermission(2);
+        CommandSourceStack cst = player.getServer().createCommandSourceStack().withMaximumPermission(2);
 
         Commands c = new Commands(Commands.CommandSelection.ALL);
+        //Ensure game rule is enabled
+        c.performCommand(cst,"gamerule spectatorsGenerateChunks true");
         if(mode == GameType.SPECTATOR) {
             c.performCommand(cst, "gamemode spectator " + displayName.getString());
             //Puts spectators into the crypt realm to await revival.

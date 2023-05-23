@@ -16,7 +16,7 @@ public class ModItems {
             DeferredRegister.create(ForgeRegistries.ITEMS, RisobEwee_HardcoreMain.MOD_ID);
 
     public static final RegistryObject<Item> TOTEM_OF_RESURRECTION = ITEMS.register("totem_of_resurrection",
-            () -> new TotemOfResurrection(new Item.Properties().tab(CreativeModeTab.TAB_MISC).rarity(Rarity.EPIC).stacksTo(1).durability(1).fireResistant()));
+            () -> new TotemOfResurrection(new Item.Properties().tab(CreativeModeTab.TAB_MISC).rarity(Rarity.EPIC).stacksTo(1).fireResistant()));
 
     public static final RegistryObject<Item> PORTAL_KEY = ITEMS.register("portal_key", CatalystItem::new);
 

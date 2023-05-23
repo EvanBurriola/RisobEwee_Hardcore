@@ -74,7 +74,7 @@ public class ModServerEvents {
             setPlayerGameMode(player, GameType.SURVIVAL);
             reducePlayerHealth(player, 14);
             player.addTag("full_dead");
-            player.getLevel().playLocalSound(x, y, z, SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.WEATHER, 1.0F, 1.0F, false);
+            player.getLevel().playLocalSound(x, y, z, SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.BLOCKS, 1.0F, 1.0F, false);
         }
         RisobEwee_HardcoreMain.LOGGER.info("Resurrect from altar Triggered");
     }
@@ -99,6 +99,8 @@ public class ModServerEvents {
         Commands c = new Commands(Commands.CommandSelection.ALL);
         if(mode == GameType.SPECTATOR) {
             c.performCommand(cst, "gamemode spectator " + displayName.getString());
+            //Puts spectators into the crypt realm to await revival.
+            c.performCommand(cst, "execute in risobewee_hardcore:crypt run tp " + player.getDisplayName().getString() + " ~ 8 ~");
         } else if (mode == GameType.SURVIVAL) {
             c.performCommand(cst, "gamemode survival " + displayName.getString());
         }

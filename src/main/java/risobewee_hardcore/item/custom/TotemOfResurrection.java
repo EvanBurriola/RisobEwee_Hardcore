@@ -15,6 +15,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import risobewee_hardcore.RisobEwee_HardcoreMain;
 import risobewee_hardcore.events.ModServerEvents;
+import risobewee_hardcore.item.ModItems;
+import risobewee_hardcore.util.InventoryUtil;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -63,8 +65,10 @@ public class TotemOfResurrection extends Item {
 
                 if(playerSoul != null) {
                     ModServerEvents.resurrectFromAltar(playerSoul, posClicked);
-                    pContext.getItemInHand().hurt(2,null,null);
-
+                    //Remove player essence from player inventory after summoning
+                    if(InventoryUtil.hasPlayerStackInInventory(pContext.getPlayer(), ModItems.TOTEM_OF_RESURRECTION.get())){
+                        InventoryUtil.replaceHeldItemWithEmpty(pContext.getPlayer(),ModItems.TOTEM_OF_RESURRECTION.get());
+                    }
                 }
 
             }

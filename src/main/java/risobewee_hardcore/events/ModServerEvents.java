@@ -7,8 +7,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import risobewee_hardcore.RisobEwee_HardcoreMain;
 import net.minecraft.commands.CommandSourceStack;
@@ -25,7 +23,6 @@ import risobewee_hardcore.item.ModItems;
 import risobewee_hardcore.world.dimension.ModDimensions;
 
 import java.util.ArrayList;
-import java.util.stream.Stream;
 
 
 @Mod.EventBusSubscriber(modid = RisobEwee_HardcoreMain.MOD_ID)
@@ -68,12 +65,20 @@ public class ModServerEvents {
         RisobEwee_HardcoreMain.LOGGER.info("onRespawnEvent Triggered");
     }
 
-    public static void removePortalBlocks(Vec3 bottomCorner, Vec3 topCorner, Level pLevel){
-        AABB scan = new AABB(bottomCorner,topCorner);
-        Stream<BlockPos> blockPositions = BlockPos.betweenClosedStream(scan);
-        blockPositions = blockPositions.filter(blockPos -> pLevel.getBlockState(blockPos).is(ModBlocks.CRYPT_PORTAL.get()));
-        blockPositions.forEach(blockPos -> pLevel.destroyBlock(blockPos,false));
+    public static void destroyPortalBlock(BlockPos pos, Level pLevel){
+        if(pLevel.getBlockState(pos).is(ModBlocks.CRYPT_PORTAL.get())){
+            pLevel.destroyBlock(pos,false);
+        } else if (pLevel.getBlockState(pos.north()).is(ModBlocks.CRYPT_PORTAL.get())) {
+            pLevel.destroyBlock(pos.north(),false);
+        } else if (pLevel.getBlockState(pos.east()).is(ModBlocks.CRYPT_PORTAL.get())) {
+            pLevel.destroyBlock(pos.east(),false);
+        } else if (pLevel.getBlockState(pos.south()).is(ModBlocks.CRYPT_PORTAL.get())) {
+            pLevel.destroyBlock(pos.south(),false);
+        } else if (pLevel.getBlockState(pos.west()).is(ModBlocks.CRYPT_PORTAL.get())) {
+            pLevel.destroyBlock(pos.west(),false);
+        }
     }
+
     @SubscribeEvent
     public static void portalClosingEvent(PlayerEvent.PlayerChangedDimensionEvent event){
         if(event.getTo().equals(ModDimensions.CRYPT_KEY)) {
@@ -84,14 +89,8 @@ public class ModServerEvents {
 
         //Last player left the dimension
         if(event.getFrom().equals(ModDimensions.CRYPT_KEY) && playersInCrypt.isEmpty()) {
-            //Remove all crypt portal blocks from this players area
-            double x = event.getPlayer().getX();
-            double y = event.getPlayer().getY();
-            double z = event.getPlayer().getZ();
-
-            Vec3 bottomCorner = new Vec3(x-1,y,z-1);
-            Vec3 topCorner = new Vec3(x+1,y+21,z+1);
-            removePortalBlocks(bottomCorner,topCorner,event.getPlayer().getLevel());
+            //Close portal
+            destroyPortalBlock(event.getPlayer().blockPosition(),event.getPlayer().getLevel());
         }
     }
 

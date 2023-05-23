@@ -4,8 +4,10 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -20,6 +22,7 @@ import risobewee_hardcore.block.ModBlocks;
 import risobewee_hardcore.block.entity.ModBlockEntities;
 import risobewee_hardcore.entity.ModEntityTypes;
 import risobewee_hardcore.entity.client.CryptCatRenderer;
+import risobewee_hardcore.entity.custom.CryptCatEntity;
 import risobewee_hardcore.item.ModItems;
 import risobewee_hardcore.villager.ModPOIs;
 import risobewee_hardcore.world.dimension.ModDimensions;
@@ -64,12 +67,14 @@ public class RisobEwee_HardcoreMain
     }
 
 
-    private void setup(final FMLCommonSetupEvent event)
-    {
-        // some preinit code
-        LOGGER.info("HELLO FROM PREINIT");
-        LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
+    private void setup(final FMLCommonSetupEvent event) {
+        event.enqueueWork(() -> {
 
+            SpawnPlacements.register(ModEntityTypes.CRYPT_CAT.get(),
+                    SpawnPlacements.Type.ON_GROUND,
+                    Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                    CryptCatEntity::checkCryptCatSpawnRules);
+        });
     }
 
 

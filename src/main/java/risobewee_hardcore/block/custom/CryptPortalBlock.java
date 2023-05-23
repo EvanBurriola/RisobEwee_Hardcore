@@ -27,8 +27,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.Cancelable;
-import org.apache.logging.log4j.core.jmx.Server;
-import risobewee_hardcore.RisobEwee_HardcoreMain;
 import risobewee_hardcore.block.ModBlocks;
 import risobewee_hardcore.util.ModTags;
 import risobewee_hardcore.world.dimension.ModDimensions;
@@ -327,6 +325,17 @@ public class CryptPortalBlock extends Block {
 
                 for(int j = 0; j < this.height; ++j) {
                     this.level.setBlock(blockpos.above(j), ModBlocks.CRYPT_PORTAL.get().defaultBlockState().setValue(CryptPortalBlock.AXIS, this.axis), 18);
+                }
+            }
+
+        }
+
+        public void removePortalBlocks() {
+            for(int i = 0; i < this.width; ++i) {
+                BlockPos blockpos = this.bottomLeft.relative(this.rightDir, i);
+
+                for(int j = 0; j < this.height; ++j) {
+                    this.level.setBlock(blockpos.above(j), Blocks.AIR.defaultBlockState().setValue(CryptPortalBlock.AXIS, this.axis), 18);
                 }
             }
 

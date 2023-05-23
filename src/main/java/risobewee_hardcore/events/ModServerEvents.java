@@ -2,11 +2,13 @@ package risobewee_hardcore.events;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import risobewee_hardcore.RisobEwee_HardcoreMain;
 import net.minecraft.commands.CommandSourceStack;
@@ -18,11 +20,17 @@ import net.minecraft.world.level.GameType;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import risobewee_hardcore.block.ModBlocks;
 import risobewee_hardcore.item.ModItems;
+import risobewee_hardcore.world.dimension.ModDimensions;
+
+import java.util.ArrayList;
+import java.util.stream.Stream;
 
 
 @Mod.EventBusSubscriber(modid = RisobEwee_HardcoreMain.MOD_ID)
 public class ModServerEvents {
+    private static ArrayList<Player> playersInCrypt = new ArrayList<>();
 
     @SubscribeEvent
     public static void dropTotemOnDeath(LivingDeathEvent event){
@@ -60,6 +68,33 @@ public class ModServerEvents {
         RisobEwee_HardcoreMain.LOGGER.info("onRespawnEvent Triggered");
     }
 
+    public static void removePortalBlocks(Vec3 bottomCorner, Vec3 topCorner, Level pLevel){
+        AABB scan = new AABB(bottomCorner,topCorner);
+        Stream<BlockPos> blockPositions = BlockPos.betweenClosedStream(scan);
+        blockPositions = blockPositions.filter(blockPos -> pLevel.getBlockState(blockPos).is(ModBlocks.CRYPT_PORTAL.get()));
+        blockPositions.forEach(blockPos -> pLevel.destroyBlock(blockPos,false));
+    }
+    @SubscribeEvent
+    public static void portalClosingEvent(PlayerEvent.PlayerChangedDimensionEvent event){
+        if(event.getTo().equals(ModDimensions.CRYPT_KEY)) {
+            playersInCrypt.add(event.getPlayer());
+        } else if (event.getTo().equals(Level.OVERWORLD) && event.getFrom().equals(ModDimensions.CRYPT_KEY)) {
+            playersInCrypt.remove(event.getPlayer());
+        }
+
+        //Last player left the dimension
+        if(event.getFrom().equals(ModDimensions.CRYPT_KEY) && playersInCrypt.isEmpty()) {
+            //Remove all crypt portal blocks from this players area
+            double x = event.getPlayer().getX();
+            double y = event.getPlayer().getY();
+            double z = event.getPlayer().getZ();
+
+            Vec3 bottomCorner = new Vec3(x-1,y,z-1);
+            Vec3 topCorner = new Vec3(x+1,y+21,z+1);
+            removePortalBlocks(bottomCorner,topCorner,event.getPlayer().getLevel());
+        }
+    }
+
 
 
     //Adds tags to indicate the upcoming death(Player revived after first death will have tag death2)
@@ -75,6 +110,8 @@ public class ModServerEvents {
             reducePlayerHealth(player, 14);
             player.addTag("full_dead");
             player.getLevel().playLocalSound(x, y, z, SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.BLOCKS, 1.0F, 1.0F, false);
+            //Destroy alter after use
+            player.getLevel().destroyBlock(alterBlock,false);
         }
         RisobEwee_HardcoreMain.LOGGER.info("Resurrect from altar Triggered");
     }

@@ -18,7 +18,7 @@ public class ModEntityTypes {
 
     public static final RegistryObject<EntityType<CryptCatEntity>> CRYPT_CAT =
             ENTITY_TYPES.register("crypt_cat",
-                    () -> EntityType.Builder.of(CryptCatEntity::new, MobCategory.CREATURE)
+                    () -> EntityType.Builder.of(CryptCatEntity::new, MobCategory.MONSTER)
                             .sized(.6f, .8f)
                             .build(new ResourceLocation(RisobEwee_HardcoreMain.MOD_ID, "crypt_cat").toString()));
 

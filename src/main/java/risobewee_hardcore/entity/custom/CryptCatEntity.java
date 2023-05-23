@@ -16,13 +16,16 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import org.checkerframework.checker.units.qual.A;
 import org.jetbrains.annotations.Nullable;
+import risobewee_hardcore.RisobEwee_HardcoreMain;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -33,29 +36,26 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import java.util.Random;
 
-public class CryptCatEntity extends Animal implements IAnimatable {
+public class CryptCatEntity extends Monster implements IAnimatable {
     private AnimationFactory factory = new AnimationFactory(this);
-    public CryptCatEntity(EntityType<? extends Animal> entityType, Level level) {
+    public CryptCatEntity(EntityType<? extends Monster> entityType, Level level) {
 
         super(entityType, level);
     }
 
 
-//    public static boolean checkCryptCatSpawnRules(EntityType<CryptCatEntity> pCryptCatEntity, LevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, Random pRandom) {
-//        Holder<Biome> holder = pLevel.getBiome(pPos);
-//
-//        double chance = Math.random();
-//        if (chance <= .1) {
-//            if (!holder.is(Biomes.FROZEN_OCEAN) && !holder.is(Biomes.DEEP_FROZEN_OCEAN)) {
-//                RisobiWalrusMain.LOGGER.info("amongus"+checkAnimalSpawnRules(pWalrusEntity, pLevel, pSpawnType, pPos, pRandom));
-//                return checkAnimalSpawnRules(pWalrusEntity, pLevel, pSpawnType, pPos, pRandom);
-//            } else {
-//                RisobiWalrusMain.LOGGER.info("fortnite" + (isBrightEnoughToSpawn(pLevel, pPos) && pLevel.getBlockState(pPos.below()).is(BlockTags.POLAR_BEARS_SPAWNABLE_ON_IN_FROZEN_OCEAN)));
-//                return isBrightEnoughToSpawn(pLevel, pPos) && pLevel.getBlockState(pPos.below()).is(BlockTags.GOATS_SPAWNABLE_ON);
-//            }
-//        }
-//        return false;
-//    }
+    public static boolean checkCryptCatSpawnRules(EntityType<CryptCatEntity> pCryptCatEntity, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, Random pRandom) {
+        Holder<Biome> holder = pLevel.getBiome(pPos);
+
+        double chance = Math.random();
+        if (chance <= 0.5) {
+            if (holder.is(Biomes.WARPED_FOREST)) {
+                RisobEwee_HardcoreMain.LOGGER.info("amongus"+ (checkMonsterSpawnRules(pCryptCatEntity, pLevel, pSpawnType, pPos, pRandom) && pLevel.getBlockState(pPos.below()).is(BlockTags.NYLIUM)));
+                return checkMonsterSpawnRules(pCryptCatEntity, pLevel, pSpawnType, pPos, pRandom) && pLevel.getBlockState(pPos.below()).is(BlockTags.NYLIUM);
+            }
+        }
+        return false;
+    }
 
 
     public static AttributeSupplier setAttributes() {
@@ -78,11 +78,6 @@ public class CryptCatEntity extends Animal implements IAnimatable {
     }
 
 
-    @Nullable
-    @Override
-    public AgeableMob getBreedOffspring(ServerLevel pLevel, AgeableMob p_146744_) {
-        return null;
-    }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if (event.isMoving()) {

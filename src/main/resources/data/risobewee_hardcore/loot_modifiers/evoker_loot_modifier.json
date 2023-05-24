@@ -1,0 +1,10 @@
+{
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "minecraft:entities/evoker"
+    }
+  ],
+  "addition": "minecraft:golden_apple",
+  "type": "risobewee_hardcore:evoker_loot_modifier"
+}
